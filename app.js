@@ -1,9 +1,15 @@
-const express = require("express");
+const cluster = require("cluster");
 
-const app = express();
+if (cluster.isMaster) {
+  cluster.fork();
+} else {
+  const express = require("express");
 
-app.get("/", (req, res) => {
-  res.send({ hello: "World" });
-});
+  const app = express();
 
-app.listen(3000, () => console.log(`server started on port 3000`));
+  app.get("/", (req, res) => {
+    res.send({ hello: "World" });
+  });
+
+  app.listen(3000, () => console.log(`server started on port 3000`));
+}
